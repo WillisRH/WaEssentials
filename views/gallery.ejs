@@ -197,24 +197,36 @@
   <h1>Whatsapp Image Gallery</h1> 
   <h2>This is an exploit from Whatsappweb-js. Sometimes can be patched!</h2>
   <a href="https://github.com/willisrh" class="weem">Made by wls_rhtmn.</a>
+  <a href="/" class="weem">Menu.</a>
   <% if (files.length === 0) { %>
-    <p>No images found.</p>
+    <p>No images/videos found.</p>
   <% } else { %>
     <ul>
       <% files.forEach((file) => { %>
         <li>
-          <a href="#" class="image-link" data-src="/downloaded/<%= encodeURIComponent(file) %>">
-            <img src="/downloaded/<%= encodeURIComponent(file) %>" alt="<%= file %>">
-            <div class="file-info">
-              <div class="file-name"><%= file %></div>
-              <a href="/downloaded/<%= encodeURIComponent(file) %>" class="download-btn" download>Download</a>
-              <a href="/remove-image/<%= encodeURIComponent(file) %>" class="remove-btn">Remove</a>
-            </div>
-          </a>
+          <% if (file.endsWith('.mp4')) { %>
+            <video width="320" height="240" controls>
+              <source src="/downloaded/<%= file %>" type="video/mp4">
+            </video>
+          <% } else if (file.endsWith('.mp3')) { %>
+            <audio controls volume="0.1">
+              <source src="/downloaded/<%= file %>" type="audio/mpeg">
+            </audio>
+          <% } else { %>
+            <a href="#" class="image-link" data-src="/downloaded/<%= encodeURIComponent(file) %>">
+              <img src="/downloaded/<%= encodeURIComponent(file) %>" alt="<%= file %>">
+            </a>
+          <% } %>
+          <div class="file-info">
+            <a href="/gallery/<%= file %>" class="file-name"><%= file %></a>
+            <a href="/downloaded/<%= encodeURIComponent(file) %>" class="download-btn" download>Download</a>
+            <a href="/remove-image/<%= encodeURIComponent(file) %>" class="remove-btn">Remove</a>
+          </div>
         </li>
       <% }); %>
     </ul>
   <% } %>
+  
 
   <div id="focused-image" class="focused-img" style="display: none;">
     <img id="focused-img-src" src="" alt="Focused Image">

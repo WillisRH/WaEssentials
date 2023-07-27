@@ -1,0 +1,58 @@
+<!-- chat.ejs template -->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <style>
+    /* CSS styles for chat.ejs */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .chat-entry {
+      margin-bottom: 10px;
+      padding: 10px;
+    }
+
+    .chat-entry.from-me {
+      text-align: right;
+      background-color: #7aff7a; /* Whitish Green */
+    }
+
+    .chat-entry span {
+      display: block;
+    }
+
+    .sender {
+      font-weight: bold;
+    }
+
+    .from-me .message {
+      background-color: #dcf8c6; /* Light Green */
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <% for (let i = 0; i < chatEntries.length; i++) { %>
+      <% const chatEntry = chatEntries[i]; %>
+      <% const isFromMe = chatEntry.fromme === 1; %>
+      <div class="chat-entry <%= isFromMe ? 'from-me' : '' %>">
+        <span class="sender">Sender: <%= chatEntry.pushname %></span>
+        <span>Group Name: <%= chatEntry.cname %></span>
+        <span>Phone Number: <%= chatEntry.phonenumber %></span>
+        <span>Fromme: <%= chatEntry.fromme %></span>
+        <span class="message <%= isFromMe ? 'from-me' : '' %>">Message: <%= chatEntry.messagebody %></span>
+      </div>
+    <% } %>
+  </div>
+</body>
+</html>
