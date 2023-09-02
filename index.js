@@ -16,14 +16,21 @@ const handlePromoteAdminCommand = require('./commands/promoteadmin');
 const handleUptimeCommand = require('./commands/uptime')
 const handleStickercreateCommand = require('./commands/stickercreate')
 const { handleAuthentication, handleQRCode } = require('./utils/authHandler');
-const { renderHomePage, handleStatusForm, renderChatlistPage, saveChatData, renderErrorPage } = require('./utils/routes');
+const { renderHomePage, handleStatusForm, renderErrorPage } = require('./utils/routes');
 const { handleOtsMessage, recreateFolder, createDownloadedFolder, renderGallery, renderDelete, handleOtsVideo, redirectVideo, handleOtsAudio } = require('./utils/ots');
-const { connectToDatabase } = require('./utils/mysql');
+// const { connectToDatabase } = require('./utils/mysql');
 const { changeStickerName, deleteStickerName, claimStickerName } = require('./commands/changestickername');
 const ffmpeg = require('fluent-ffmpeg');
 const handleGempaTerkiniCommand = require('./commands/gempa');
 const handleCuacaCommand = require('./commands/cuaca');
 const handleDebugLokasiCommand = require('./commands/city');
+const handleClaimPicture = require('./commands/claimpicture');
+const { checkDB, confess } = require("./utils/database");
+const handleConfessCommand = require('./commands/confess');
+const handlePostCommand = require('./commands/postconfess');
+const handleConfessWhatsappCommand = require('./commands/createconfess');
+const handleDeleteConfess = require('./commands/deleteconfess');
+const { handleRegistration, handleMessageRegistration } = require('./utils/userdata');
 
 const app = express();
 const port = 2111;
@@ -78,9 +85,22 @@ client.on('message_create', async (message) => {
   const isAdmin = isUserAdmin(senderNumber)
   const messagecommand = message.body.toLowerCase();
   const chat = await message.getChat();
+  // const number = (await message.getContact()).id.user
+  // const server = (await message.getContact()).id.server
+  // const name = (await message.getContact()).pushname
+  // const devicetype = message.deviceType
+  // const isgroup = chat.isGroup;
+  // const timestamp = message.timestamp
+  // console.log(number + server + name + devicetype + isgroup + timestamp)
+  // console.log(message)
+
+  handleRegistration(message);
+  handleMessageRegistration(message);
 
   // everyone
-  if (messagecommand.startsWith(prefix + 'everyone')) {
+  if (messagecommand.startsWith(prefix + 'everyone') || 
+  messagecommand.startsWith('@everyone') || 
+  messagecommand.startsWith('@all')) {
     if (status == "vanish") return;
     await handleEveryoneCommand(message, client);
   }
@@ -204,6 +224,35 @@ client.on('message_create', async (message) => {
     await handleDebugLokasiCommand(message)
   }
 
+  else if (messagecommand.startsWith(prefix + 'confesslist')) {
+    if (status == "vanish") return;
+    await handleConfessCommand(message)
+  }
+
+  else if (messagecommand.startsWith(prefix + 'postconfess')) {
+    if (status == "vanish") return;
+    await handlePostCommand(message)
+  }
+
+  else if (messagecommand.startsWith(prefix + 'createconfess')) {
+    if (status == "vanish") return;
+    await handleConfessWhatsappCommand(message);
+  }
+
+  else if (messagecommand.startsWith(prefix + 'deleteconfess')) {
+    if (status == "vanish") return;
+    await handleDeleteConfess(message);
+  }
+
+  else if (messagecommand.startsWith(prefix + 'mediatake')) {
+    if (!isAdmin) {
+      if (status == "vanish") return;
+      await message.reply("You are not authorized to use this command!");
+      return;
+    }
+    await handleClaimPicture(client, message);
+  }
+
   const media = await message.downloadMedia();
   // console.log(media.mimetype)
   handleOtsMessage(message);
@@ -217,9 +266,9 @@ client.on('message_create', async (message) => {
  */
 
 
-app.get('/chathistory', (req, res) => {
-  renderChatlistPage(req, res)
-});
+// app.get('/chathistory', (req, res) => {
+//   renderChatlistPage(req, res)
+// });
 
 app.get('/', (req, res) => {
   renderHomePage(req, res, status)
@@ -247,6 +296,7 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
+checkDB();
 // connectToDatabase();
 
 /**

@@ -20,11 +20,12 @@
     "fs": "^0.0.1-security",
     "metascraper": "^5.34.7",
     "moment": "^2.29.4",
+    "mongoose": "^7.4.4",
     "mysql": "^2.18.1",
     "path": "^0.12.7",
     "puppeteer": "^20.9.0",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.21.0",
+    "whatsapp-web.js": "github:pedroslopez/whatsapp-web.js#abac063b779570729476cf42e29dc694e5345ca6",
     "xml2js": "^0.6.0"
   }
 }

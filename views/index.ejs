@@ -6,7 +6,6 @@
 </head>
 <body>
     <h1>WhatsApp Status</h1>
-    <a href="/gallery">Whatsapp Gallery</a>
     <!-- Status selection form -->
     <div class="form-container">
       <form class="status-form" action="/status" method="POST">
@@ -23,18 +22,21 @@
   
     <!-- Current status display -->
     <div class="current-status">
-      Current Status: <%= status %>
+      Current Status: <%= status %> <br>
     </div>
+    <a href="/gallery">Whatsapp Gallery >> <br></a>
+    <a href="/chathistory">Whatsapp Chat History >></a>
   </body>
 </html>
 
 <style>
     * {
   text-align: center;
+  font-size: large;
 }
 
 .form-container {
-  margin-bottom: 20px;
+
 }
 
 .status-form {
@@ -68,5 +70,40 @@
 a {
   color: black;
     font-size: 20px;
+}
+h1 {
+  margin-top: 250px;
+  font-size: xx-large;
+}
+@media (max-width: 768px) {
+  *{
+    font-size: xx-large;
+  }
+  h1 {
+    font-size:  xx-large; /* Increase font size for smaller screens */
+    text-align: center; /* Center the heading text on mobile */
+  }
+
+  .status-form {
+    margin-top: 20px;
+  }
+
+  .status-label,
+  .status-input,
+  .status-submit {
+    width: 100%;
+  }
+
+  .status-submit {
+    margin-top: 10px;
+  }
+
+  .current-status {
+    font-size: 20px; /* Increase font size for current status on mobile */
+  }
+
+  a {
+    font-size: 24px; /* Increase font size for the link on mobile */
+  }
 }
 </style>
